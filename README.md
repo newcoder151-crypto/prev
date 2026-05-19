@@ -28,3 +28,166 @@ Now let me attempt to actually build and capture all the errors:Now I have a com
 **`src/modules/hls/hls_module.c` — 1 bug fixed**
 
 5. **Missing `#include <sys/types.h>`** — `hls_module.c` calls `mkdir()` which requires `sys/types.h` in addition to `sys/stat.h` for POSIX compliance. On some Linux distros `sys/stat.h` pulls it in transitively, but it's not guaranteed — made it explicit.
+
+
+
+
+
+
+
+
+
+nvr@nvr:~/Documents/ai_mnvr/integrated-mnvr (1)/integrated/nvr_core$ ./build/mnvrd   -c /etc/mnvr/mnvr.conf   -s database_pg.sql   -d "host=localhost port=5432 dbname=mnvr user=mnvr password=mnvr sslmode=disable"
+
+  ????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+  ???   mNVR - Mobile Network Video Recorder   ???
+  ???   Version 1.0.0                           ???
+  ????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+
+[LOGGER] Cannot open log file: /var/log/mnvr/mnvr.log
+2026-05-19 09:53:26 [INFO ] [MAIN        ] mNVR v1.0.0 starting...
+2026-05-19 09:53:26 [INFO ] [MAIN        ] Config: /etc/mnvr/mnvr.conf  Schema: database_pg.sql
+2026-05-19 09:53:26 [INFO ] [MAIN        ] PostgreSQL conninfo: host=localhost port=5432 dbname=mnvr user=mnvr password=mnvr sslmode=disable
+2026-05-19 09:53:26 [INFO ] [CONFIG      ] === system_config table (after sync) ===
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   device_id                    = MNVR-TRAIN-001                 [STRING]
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   device_name                  = Coach-A NVR                    [STRING]
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   firmware_version             = 1.0.0                          [STRING,RO]
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   installation_date            =                                [STRING]
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   coach_number                 =                                [STRING]
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   train_number                 =                                [STRING]
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   recording_retention_days     = 30                             [INTEGER]
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   storage_path                 = /home/nvr/Documents/ai_mnvr/railway-nvr-v6 (1)/nvr-final2/storage/recordings [STRING,RO]
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   max_storage_gb               = 4000                           [INTEGER]
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   enable_audio                 = 1                              [BOOLEAN]
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   enable_gps                   = 1                              [BOOLEAN]
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   enable_watermark             = 1                              [BOOLEAN]
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   enable_face_detection        = 1                              [BOOLEAN]
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   time_sync_method             = PTP       # PTP                [STRING]
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   ptp_domain                   = 0                              [INTEGER]
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   ntp_server                   = pool.ntp.org                   [STRING]
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   api_server_port              = 8080                           [INTEGER]
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   rtsp_server_port             = 8554                           [INTEGER]
+2026-05-19 09:53:26 [INFO ] [CONFIG      ] === end system_config ===
+2026-05-19 09:53:26 [INFO ] [CONFIG      ] === Configuration Loaded ===
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   device_id          = MNVR-TRAIN-001
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   device_name        = Coach-A NVR
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   storage_base       = /storage/recordings
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   hls_base           = /storage/hls
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   db_path            = host=localhost port=5432 dbname=mnvr user=mnvr password=mnvr sslmode=disable
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   log_dir            = /var/log/mnvr
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   segment_duration   = 60 sec
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   segment_max_size   = 2048 MB
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   retention_days     = 30
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   enable_audio       = true
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   hls_segment_sec    = 4
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   hls_window_size    = 10
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   rtsp_server_port   = 8554
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   api_port           = 8080
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   enable_face_det    = true
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   enable_motion_det  = true
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   motion_threshold   = 0.05
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   time_sync_method   = PTP       # PTP
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   health_poll_sec    = 10
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   cpu_warn           = 85%
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   mem_warn           = 90%
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   disk_warn          = 90%
+2026-05-19 09:53:26 [INFO ] [CONFIG      ]   log_min_level      = 2
+2026-05-19 09:53:26 [INFO ] [CONFIG      ] === End Configuration ===
+2026-05-19 09:53:26 [INFO ] [DB          ] Connecting to PostgreSQL: host=localhost port=5432 dbname=mnvr user=mnvr password=mnvr sslmode=disable
+2026-05-19 09:53:26 [INFO ] [DB          ] PostgreSQL connected (server v160013)
+2026-05-19 09:53:26 [WARN ] [DB          ] Schema file not found: database_pg.sql
+2026-05-19 09:53:26 [WARN ] [DB          ] Schema apply returned errors (may be OK if already applied)
+2026-05-19 09:53:26 [INFO ] [DB          ] PostgreSQL module started
+2026-05-19 09:53:26 [INFO ] [DB          ] Async writer thread started
+2026-05-19 09:53:27 [INFO ] [CONFIG      ] === system_config table (after sync) ===
+2026-05-19 09:53:27 [INFO ] [CONFIG      ]   device_id                    = MNVR-TRAIN-001                 [STRING]
+2026-05-19 09:53:27 [INFO ] [CONFIG      ]   device_name                  = Coach-A NVR                    [STRING]
+2026-05-19 09:53:27 [INFO ] [CONFIG      ]   firmware_version             = 1.0.0                          [STRING,RO]
+2026-05-19 09:53:27 [INFO ] [CONFIG      ]   installation_date            =                                [STRING]
+2026-05-19 09:53:27 [INFO ] [CONFIG      ]   coach_number                 =                                [STRING]
+2026-05-19 09:53:27 [INFO ] [CONFIG      ]   train_number                 =                                [STRING]
+2026-05-19 09:53:27 [INFO ] [CONFIG      ]   recording_retention_days     = 30                             [INTEGER]
+2026-05-19 09:53:27 [INFO ] [CONFIG      ]   storage_path                 = /home/nvr/Documents/ai_mnvr/railway-nvr-v6 (1)/nvr-final2/storage/recordings [STRING,RO]
+2026-05-19 09:53:27 [INFO ] [CONFIG      ]   max_storage_gb               = 4000                           [INTEGER]
+2026-05-19 09:53:27 [INFO ] [CONFIG      ]   enable_audio                 = 1                              [BOOLEAN]
+2026-05-19 09:53:27 [INFO ] [CONFIG      ]   enable_gps                   = 1                              [BOOLEAN]
+2026-05-19 09:53:27 [INFO ] [CONFIG      ]   enable_watermark             = 1                              [BOOLEAN]
+2026-05-19 09:53:27 [INFO ] [CONFIG      ]   enable_face_detection        = 1                              [BOOLEAN]
+2026-05-19 09:53:27 [INFO ] [CONFIG      ]   time_sync_method             = PTP       # PTP                [STRING]
+2026-05-19 09:53:27 [INFO ] [CONFIG      ]   ptp_domain                   = 0                              [INTEGER]
+2026-05-19 09:53:27 [INFO ] [CONFIG      ]   ntp_server                   = pool.ntp.org                   [STRING]
+2026-05-19 09:53:27 [INFO ] [CONFIG      ]   api_server_port              = 8080                           [INTEGER]
+2026-05-19 09:53:27 [INFO ] [CONFIG      ]   rtsp_server_port             = 8554                           [INTEGER]
+2026-05-19 09:53:27 [INFO ] [CONFIG      ] === end system_config ===
+2026-05-19 09:53:27 [INFO ] [CONFIG      ] Loaded 2 active cameras from DB
+2026-05-19 09:53:27 [INFO ] [MAIN        ] Loaded 2 camera(s)
+2026-05-19 09:53:27 [INFO ] [MAIN        ] ONVIF module: 0 camera(s) configured, discovery=ON
+2026-05-19 09:53:27 [INFO ] [ONVIF       ] === ONVIF Configuration ===
+2026-05-19 09:53:27 [INFO ] [ONVIF       ]   multicast_ip       = 239.255.255.250
+2026-05-19 09:53:27 [INFO ] [ONVIF       ]   multicast_port     = 3702
+2026-05-19 09:53:27 [INFO ] [ONVIF       ]   discovery_interval = 60 sec
+2026-05-19 09:53:27 [INFO ] [ONVIF       ]   probe_timeout      = 3000 ms
+2026-05-19 09:53:27 [INFO ] [ONVIF       ]   enable_discovery   = true
+2026-05-19 09:53:27 [INFO ] [ONVIF       ] === End ONVIF Configuration ===
+2026-05-19 09:53:27 [INFO ] [MAIN        ] ONVIF module started (probe+discovery)
+2026-05-19 09:53:27 [INFO ] [MAIN        ] Health monitor started
+2026-05-19 09:53:27 [INFO ] [HEALTH      ] Health monitor started (interval 10s)
+2026-05-19 09:53:27 [INFO ] [ONVIF       ] Discovery thread started (interval 60s, multicast 239.255.255.250:3702)
+Ensured output directory exists: /home/nvr/Documents/ai_mnvr/integrated-mnvr (1)/integrated/storage/recordings/cam_22
+Added Camera 0 (Front Entrance)
+Ensured output directory exists: /home/nvr/Documents/ai_mnvr/integrated-mnvr (1)/integrated/storage/recordings/cam_23
+Added Camera 1 (Front Entrance)
+
+=== Starting 2 cameras ===
+
+2026-05-19 09:53:27 [INFO ] [RECORDER    ] [Front Entrance] queued  url=rtsp://admin:admin@123@172.210.140.130:554/onvif/media?profile=Profile1  out=/home/nvr/Documents/ai_mnvr/integrated-mnvr (1)/integrated/storage/recordings/cam_22/cam_22
+2026-05-19 09:53:27 [INFO ] [RECORDER    ] [Front Entrance] queued  url=rtsp://admin:bel123456@172.210.140.91:554/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif  out=/home/nvr/Documents/ai_mnvr/integrated-mnvr (1)/integrated/storage/recordings/cam_23/cam_23
+2026-05-19 09:53:27 [INFO ] [ONVIF       ] Discovered device:  @ 172.210.140.91
+2026-05-19 09:53:27 [INFO ] [ONVIF       ] Discovered device:  @ 172.210.140.130
+[Front Entrance] Starting recording
+  URL: rtsp://admin:admin@123@172.210.140.130:554/onvif/media?profile=Profile1
+  Output: /home/nvr/Documents/ai_mnvr/integrated-mnvr (1)/integrated/storage/recordings/cam_22/cam_22
+  Segmentation: 2048 MB 120 sec 
+[Front Entrance] Recording thread started
+[Front Entrance] State: NULL -> READY
+[Front Entrance] State: READY -> PAUSED
+[Front Entrance] ERROR: Unauthorized
+[Front Entrance] Debug: ../gst/rtsp/gstrtspsrc.c(7007): gst_rtspsrc_send (): /GstPipeline:camera-0/GstRTSPSrc:rtspsrc0:
+Unauthorized (401)
+[Front Entrance] Recording thread finished
+[Front Entrance] Starting recording
+  URL: rtsp://admin:bel123456@172.210.140.91:554/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif
+  Output: /home/nvr/Documents/ai_mnvr/integrated-mnvr (1)/integrated/storage/recordings/cam_23/cam_23
+  Segmentation: 2048 MB 120 sec 
+[Front Entrance] Recording thread started
+[Front Entrance] State: NULL -> READY
+[Front Entrance] State: READY -> PAUSED
+
+=== All cameras started ===
+
+2026-05-19 09:53:27 [INFO ] [RECORDER    ] Started 2 camera(s) via original GStreamer module
+2026-05-19 09:53:27 [INFO ] [MAIN        ] Recorder started (2 camera(s))
+2026-05-19 09:53:27 [INFO ] [HLS         ] [cam 22] HLS worker started
+2026-05-19 09:53:27 [INFO ] [HLS         ] [cam 22] HLS worker started -> /home/nvr/Documents/ai_mnvr/integrated-mnvr (1)/integrated/storage/hls/cam_22
+2026-05-19 09:53:27 [INFO ] [HLS         ] [cam 23] HLS worker started
+2026-05-19 09:53:27 [INFO ] [MAIN        ] HLS module started
+2026-05-19 09:53:27 [INFO ] [HLS         ] [cam 23] HLS worker started -> /home/nvr/Documents/ai_mnvr/integrated-mnvr (1)/integrated/storage/hls/cam_23
+2026-05-19 09:53:27 [INFO ] [STREAMER    ] [Front Entrance] Streaming on udp://127.0.0.1:5044
+2026-05-19 09:53:27 [INFO ] [STREAMER    ] [Front Entrance] Thread started
+[Front Entrance] Starting segment 0: /home/nvr/Documents/ai_mnvr/integrated-mnvr (1)/integrated/storage/recordings/cam_23/cam_23_20260519_095327_seg00000.mp4
+[Front Entrance] State: PAUSED -> PLAYING
+2026-05-19 09:53:27 [INFO ] [STREAMER    ] [Front Entrance] Streaming on udp://127.0.0.1:5046
+2026-05-19 09:53:27 [INFO ] [STREAMER    ] [Front Entrance] Thread started
+2026-05-19 09:53:27 [ERROR] [STREAMER    ] [Front Entrance] Unauthorized
+2026-05-19 09:53:27 [INFO ] [STREAMER    ] [Front Entrance] Thread stopped
+2026-05-19 09:53:27 [INFO ] [MAIN        ] Streamer started
+2026-05-19 09:53:27 [INFO ] [AI          ] [Front Entrance] AI worker started
+2026-05-19 09:53:27 [INFO ] [AI          ] Started AI workers for 2 camera(s)
+2026-05-19 09:53:27 [INFO ] [MAIN        ] AI module started
+2026-05-19 09:53:27 [INFO ] [AI          ] [Front Entrance] AI worker started
+2026-05-19 09:53:27 [FATAL] [API         ] Failed to start HTTP server on port 8080
+2026-05-19 09:53:27 [INFO ] [MAIN        ] mNVR fully operational - 2 camera(s). Press Ctrl+C to stop.
+2026-05-19 09:53:30 [INFO ] [MAIN        ] ONVIF device: (direct) @ 172.210.140.91 ( ) stream=(none)
+2026-05-19 09:53:30 [INFO ] [MAIN        ] ONVIF device: (direct) @ 172.210.140.130 ( ) stream=(none)
+
+
