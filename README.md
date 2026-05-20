@@ -190,4 +190,31 @@ Unauthorized (401)
 2026-05-19 09:53:30 [INFO ] [MAIN        ] ONVIF device: (direct) @ 172.210.140.91 ( ) stream=(none)
 2026-05-19 09:53:30 [INFO ] [MAIN        ] ONVIF device: (direct) @ 172.210.140.130 ( ) stream=(none)
 
+Now I have the full picture from the logs. Let me analyze precisely:Ran 4 commandsRan 4 commandsNow I have the complete picture. Let me map every issue from the log exactly:Ran 2 commandsRan 2 commandsNow I have the full picture. From the log:
+Problem 1: Streamer thread for cam_22 stops immediately — [Front Entrance] Unauthorized → Thread stopped. The streamer uses rtspsrc with the same RTSP URL. The recorder logs ERROR: Unauthorized for cam_22 (172.210.140.130) — the URL in the DB is rtsp://admin:admin@123@172.210.140.130 — the password contains @ which breaks URL parsing. The @ in admin@123 makes rtspsrc misparse the host. The streamer hits the same auth failure and quits with no retry.
+Problem 2: No reconnect in streamer_thread_fn — when bus_cb gets an error and quits the main loop, the thread exits permanently. There's no retry loop.
+Problem 3: No reconnect in bus_call (recorder) — same issue: on auth error or disconnect the recorder thread finishes and never restarts (health watchdog will retry but only every 10s poll cycle).
+Problem 4: RTSP URL with @ in password — rtsp://admin:admin@123@host — the fix is to percent-encode the @ in the password when building the URL, OR to use rtspsrc's user-id/user-pw properties separately so the URL doesn't need embedded credentials.Ran 4 commandsRan 4 commandsNow I have everything I need. The fix plan is:
 
+mnvr_system.h — Add rtsp_username[64] and rtsp_password[128] fields to CameraInfo so credentials travel separately from the URL
+config_module.c — When loading cameras from cameras_config_details, populate rtsp_username/rtsp_password separately, and build the rtsp_url with percent-encoded @ signs in the password
+recorder.c — Use user-id/user-pw rtspsrc properties instead of embedding creds in URL; add retry loop in recorder_thread
+streamer_module.c — Same: use user-id/user-pw; add retry loop in streamer_thread_fn
+Ran 3 commandsRan 3 commandsNow I have everything. Let me implement all four fixes:Add rtsp_username and rtsp_password fields to CameraInfoAdd rtsp_username and rtsp_password fields to CameraInfoNow update config_module.c to also JOIN cameras_config_details and populate the new credential fields, and to percent-encode @/: in passwords when embedding them in RTSP URLs:Update cam_load_row_cb and config_load_cameras to JOIN cameras_config_details for credentials and build safe RTSP URLUpdate cam_load_row_cb and config_load_cameras to JOIN cameras_config_details for credentials and build safe RTSP URLNow fix recorder.c — use user-id/user-pw rtspsrc properties and add retry loop:Use user-id/user-pw rtspsrc properties instead of embedding creds in location URLUse user-id/user-pw rtspsrc properties instead of embedding creds in location URLNow add rtsp_username/rtsp_password fields to CameraRecorder and populate them:Ran 2 commands, edited a fileRan 2 commands, edited a fileNow update recorder_module.c to copy credentials into the CameraRecorder struct:Edited 2 filesEdited 2 filesNow add the retry loop to recorder_thread and the streamer thread:Add retry loop to recorder_thread so it restarts on error/disconnect instead of exitingAdd retry loop to recorder_thread so it restarts on error/disconnect instead of exitingNow fix recorder_start — it must not pthread_create a second thread when called from the retry loop inside the existing thread. Add a flag to detect re-entry:Edited 2 filesEdited 2 filesNow fix the streamer thread — same retry loop + use user-id/user-pw:Edited 2 filesEdited 2 filesNow add rtsp_username/rtsp_password to CamStreamer and populate them from CameraInfo:Ran 2 commands, edited 2 filesRan 2 commands, edited 2 filesNow populate those fields in streamer_module_start:Copy rtsp_username/rtsp_password from CameraInfo into CamStreamer in streamer_module_startCopy rtsp_username/rtsp_password from CameraInfo into CamStreamer in streamer_module_startNow package the changed files only:Ran 2 commands, read a fileRan 2 commands, read a file7 files changed. Here's the precise diagnosis and what each fix does:
+
+Root cause 1 — Spurious 401 on cam_22 (admin@123 password)
+The RTSP URL rtsp://admin:admin@123@172.210.140.130:554/... contains two @ signs. rtspsrc parses the last @ as the user-info delimiter, so it sees username=admin:admin, password=123, and host=172.210.140.130 — producing a malformed auth header → 401 Unauthorized, even though the password is correct.
+Fix — config_module.c, recorder.c, streamer_module.c/h, recorder.h:
+
+Added rtsp_username[64] / rtsp_password[128] to CameraInfo (system header) and to CamStreamer/CameraRecorder
+config_load_cameras now LEFT JOINs cameras_config_details and loads credentials separately; a new build_rtsp_url() helper percent-encodes @ → %40 and : → %3A in passwords when they must go in the URL
+Both rtspsrc instances now set user-id/user-pw GObject properties instead of embedding creds in location= — these properties bypass URL parsing entirely and always work regardless of special characters
+
+
+Root cause 2 — Streamer thread exits permanently on any error
+streamer_thread_fn called g_main_loop_run() once, then exited. A single auth failure, network blip, or camera reboot killed the thread forever. The health watchdog only covers the recorder, not the streamer.
+Fix — streamer_module.c: streamer_thread_fn now has a retry loop — on any pipeline failure it tears down the pipeline, sleeps 5 seconds, calls build_streamer_pipeline() again, and retries indefinitely until cam->running is set to false by streamer_module_stop().
+
+Root cause 3 — Recorder thread exits permanently on error
+Same pattern in recorder_thread — one g_main_loop_run() call with no retry.
+Fix — recorder.c: recorder_thread now has a retry loop — on error/EOS it tears down the GStreamer pipeline, sleeps 5 seconds, calls recorder_start() to rebuild it, and continues. A new _in_retry flag on CameraRecorder prevents recorder_start() from spawning a second pthread when called from inside the already-running thread.
