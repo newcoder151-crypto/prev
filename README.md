@@ -319,3 +319,29 @@ void            streamer_module_destroy(StreamerModule *sm);
 const char *streamer_get_url(StreamerModule *sm, int camera_id);
 
 #endif /* STREAMER_MODULE_H */
+
+
+
+
+
+
+You said: continuecontinue7:42 AMClaude responded: Now I have a complete picture.Now I have a complete picture. Let me do the integration methodically:Ran 8 commandsRan 8 commandsNow I have the complete picture. The strategy is clear:
+
+New src files to adopt as-is (they're correct foundations): onvif_module.h, onvif_module.c, hls_module.h, hls_module.c from new_src
+new_src ai_module.h/.c and streamer_module.h/.c — take from new_src (they have YuvFrame, ai_push_yuv_frame, ai_add_camera, streamer_add_camera) and merge our retry-loop + user-id/user-pw fixes on top
+new_src config_module.c — take it, then re-apply our credential JOIN fix on top
+new_src main.c — take it as-is (it correctly uses YuvFrame/ai_push_yuv_frame which now exist), just fix the IdResult unused variable we removed before
+mnvr_system.h — keep our version (new_src is same + our rtsp_username/rtsp_password fields must stay)
+mnvr.conf — keep our corrected ports (8443/8890)
+Recorder files — keep our version (new_src is original, ours has all fixes)
+Copy new src base files to integratedCopy new src base files to integratedNow apply all our previous fixes on top of the new base:Edited 4 files, ran 4 commandsEdited 4 files, ran 4 commandsNow apply the retry loop fix to the new streamer_thread_fn:Ran a command, edited a fileRan a command, edited a fileNow apply the streamer_add_camera credential copy fix:Ran 2 commands, edited a fileRan 2 commands, edited a fileNow apply fixes to the new config_module.c — re-add our credential JOIN and pct_encode/build_rtsp_url:Replace simple cam_load_row_cb and config_load_cameras with our credential-JOIN version in new config_module.cReplace simple cam_load_row_cb and config_load_cameras with our credential-JOIN version in new config_module.cNow fix main.c — the new version reintroduces YuvFrame/ai_push_yuv_frame (which now correctly exist in the new ai_module), but still has the IdResult unused variable we removed. Fix that:Edited 2 filesEdited 2 filesNow apply recorder fixes to new recorder base:Ran 2 commands, edited a fileRan 2 commands, edited a fileGood — recorder.h already has all our fixes. Now verify recorder.c:Verify recorder.c has all our fixesVerify recorder.c has all our fixesAll recorder fixes are present. Now add sys/types.h back to new hls_module.c:Add sys/types.h to new hls_module.c for mkdir portabilityAdd sys/types.h to new hls_module.c for mkdir portabilityFinal verification sweep:Final verification of all changesFinal verification of all changesAll clean. Package only the changed files:Ran 2 commands, read a fileRan 2 commands, read a file15 files. Here's exactly what was done and why for each:
+
+onvif_module.h / onvif_module.c — taken from new source as-is. This is a complete rewrite: full ONVIF Profile S implementation with WS-Discovery, Password Digest auth (SHA-1 + nonce + camera time sync), and all services (Device, Media, PTZ, Imaging, Events). Config is now loaded from onvif_settings and cameras_config_details DB tables instead of the INI file. The startup probe runs before the discovery thread, giving cameras a chance to register immediately.
+hls_module.h / hls_module.c — taken from new source, then #include <sys/types.h> re-added for mkdir portability. The key addition is hls_add_camera() — the hot-add function that main.c calls when ONVIF discovers a new camera after startup.
+ai_module.h / ai_module.c — taken from new source. This version defines YuvFrame, ai_push_yuv_frame(), and ai_add_camera() which main.c depends on. The previous integrated version was missing all three — causing link errors.
+streamer_module.h / streamer_module.c — taken from new source (defines YuvFrame, streamer_add_camera()), then all previous fixes applied on top: rtsp_username/rtsp_password fields added to CamStreamer, user-id/user-pw GObject properties used instead of URL embedding, credentials copied in both streamer_module_start and streamer_add_camera, retry loop added to streamer_thread_fn.
+config_module.c — taken from new source (cleaner two-phase load, recording_settings/hls_settings/health_monitor_settings table loading), then the entire credential JOIN section re-applied: pct_encode() and build_rtsp_url() helpers added, config_load_cameras query upgraded to LEFT JOIN cameras_config_details on IP address to fetch rtsp_username/rtsp_password, RTSP URL built with properly encoded credentials.
+main.c — taken from new source (correctly uses YuvFrame/ai_push_yuv_frame, calls streamer_add_camera/ai_add_camera/hls_add_camera which now all exist), then the IdResult unused variable removed to silence -Wunused-variable.
+mnvr_system.h — kept from previous session (new source is identical except missing our two credential fields rtsp_username[64] and rtsp_password[128] on CameraInfo which the recorder and streamer depend on).
+recorder.h / recorder.c / recorder_module.c — kept from previous session (new source had none of the fixes; our version has user-id/user-pw properties, credential fields, _in_retry flag, and the full retry loop).
+config/mnvr.conf — kept from previous session with correct ports: api_port = 8443 and webrtc_server_port = 8890 so the NVR daemon doesn't fight the frontend for port 8080.
