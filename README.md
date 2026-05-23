@@ -345,3 +345,59 @@ main.c — taken from new source (correctly uses YuvFrame/ai_push_yuv_frame, cal
 mnvr_system.h — kept from previous session (new source is identical except missing our two credential fields rtsp_username[64] and rtsp_password[128] on CameraInfo which the recorder and streamer depend on).
 recorder.h / recorder.c / recorder_module.c — kept from previous session (new source had none of the fixes; our version has user-id/user-pw properties, credential fields, _in_retry flag, and the full retry loop).
 config/mnvr.conf — kept from previous session with correct ports: api_port = 8443 and webrtc_server_port = 8890 so the NVR daemon doesn't fight the frontend for port 8080.
+
+
+
+
+
+## NOTIFICATIONS
+
+
+
+
+
+
+
+
+
+
+
+Now I have the complete picture. Let me identify all the issues:
+
+Counter shows 9+ — hardcoded cap in NotificationsDropdown, and useEvents has limit: 20 so it only fetches 20 but the real total is from the server's total field which is never used
+Doesn't show all notifications — useEvents doesn't expose total, dropdown uses events?.length as the count, and the hook drops the total from the response
+Acknowledge All is broken — calls events?.forEach(ev => handleAck(ev.event_id)) which fires N individual API calls instead of the batch endpoint, and acknowledge is single-event so it only tracks one pending state
+Live popup notifications — WebSocket sends event.new but nothing turns it into a toast popup
+IP address — 140.129 → 140.130 in DB seed/config files
+
+Let me fix them all:Fix useEvents to return total count separately and remove limit capFix useEvents to return total count separately and remove limit capNow rewrite NotificationsDropdown with all fixes: exact count, no 9+ cap, all notifications shown with scroll, single-request acknowledge all, live toast popups:Rewrite NotificationsDropdown with all fixesRewrite NotificationsDropdown with all fixesNow fix all usages of useEvents in other files that now expect the new shape { events, total } instead of EventRow[]:Ran 5 commands, edited 2 filesRan 5 commands, edited 2 filesNow fix the dashboard stats hook which also uses events:Check dashboard stats hookCheck dashboard stats hookGood — dashboard stats doesn't call useEvents directly. Now fix the NVR core WebSocket health push URL (it pointed to old 8080 API port):Fix NVR_CORE_URL default port in websocket.js from 8080 to 8443Fix NVR_CORE_URL default port in websocket.js from 8080 to 8443Now fix the IP address 140.129 → 140.130 everywhere:Ran 3 commands, edited a fileRan 3 commands, edited a fileAll clear. Now package everything:Ran 2 commands, read a fileRan 2 commands, read a file6 files changed. Here's the full breakdown of every fix:
+
+src/hooks/use-events.ts
+
+useQuery now returns { events: EventRow[], total: number } instead of just EventRow[] — the server always returns both and we were throwing total away
+Added useAcknowledgeBatch export for batch-by-IDs via /api/events/batch/acknowledge
+No other logic changed
+
+
+src/components/notifications/NotificationsDropdown.tsx — complete rewrite:
+
+Exact count, no 9+ cap — badge now renders {unread} directly, with min-w sizing so 3-digit numbers don't clip
+Shows all unread — request uses limit: 500, scroll area enlarged to max-h-[420px]
+Acknowledge All uses a single request — switched from iterating events.forEach(handleAck) (which fired N individual API calls and raced each other) to useAcknowledgeAll which hits /api/events/all/acknowledge — one DB UPDATE, one broadcast
+Live popup toasts — when WebSocket delivers event.new, showEventToast() fires a sonner toast styled by severity: CRITICAL/EMERGENCY/ERROR → toast.error, WARNING → toast.warning, INFO → toast.info, each with appropriate duration. A seenRef set prevents duplicate toasts on WebSocket reconnect
+Acknowledge button stays enabled correctly — individual ack no longer blocks the whole list while isPending
+
+
+src/pages/EventsPage.tsx and src/pages/AiAnalytics.tsx
+
+Updated to destructure resp?.events ?? [] from the new hook shape — these were passing useEvents data directly as EventRow[] which would now be undefined since the shape changed
+
+
+server/src/websocket.js
+
+Default NVR_CORE_URL corrected from localhost:8080 to localhost:8443 to match the port we moved the NVR core REST API to in a previous session
+
+
+nvr_core/config/mnvr.conf
+
+Comment line onvif_cam_2_ip = 172.210.140.129 updated to 172.210.140.130 — the only occurrence of 140.129 in the entire codebase
