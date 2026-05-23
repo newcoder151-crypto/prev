@@ -401,3 +401,41 @@ Default NVR_CORE_URL corrected from localhost:8080 to localhost:8443 to match th
 nvr_core/config/mnvr.conf
 
 Comment line onvif_cam_2_ip = 172.210.140.129 updated to 172.210.140.130 — the only occurrence of 140.129 in the entire codebase
+
+
+
+src/pages/VideoPlayer.tsx — 2 changes
+1. Recordings sorted latest first. camSortedRecs was sorting a - b (oldest first). Changed to b - a so the newest recording appears at the top of the sidebar list. The server route already returns ORDER BY start_timestamp DESC — this was purely a client-side sort direction bug.
+2. New ?at= URL parameter support. Added initAt = searchParams.get("at") which expects an ISO timestamp string (e.g. 2026-05-19T09:53:27.000Z). When recordings load, a one-shot useEffect (guarded by initAtApplied ref so it only runs once) finds the recording whose time window contains initAt. If an exact match exists it uses it; otherwise it falls back to the nearest recording before the timestamp. It then:
+
+Sets filterCamId and selectedRecId to select that recording
+After a 250ms delay (to let the load-recording effect set video.src), seeks video.currentTime to the exact offset within that recording and calls video.play()
+Uses loadedmetadata event listener as a fallback if the video isn't ready yet
+
+
+src/pages/EventsPage.tsx — 1 change
+The "Watch" button previously navigated to /player?camera=X&live=true (always opened live stream, never the recording). Now it navigates to /player?camera=${camera_id}&at=${encodeURIComponent(occurred_at)} — directly jumps to the frame in recordings at the exact moment the event occurred.
+
+src/components/notifications/NotificationsDropdown.tsx — 3 changes
+1. Click notification → view recording. Added useNavigate. Each notification row is now cursor-pointer and calls handleEventClick(ev) which closes the popover and navigates to /player?camera=X&at=TIMESTAMP. A subtle → view recording hint appears on hover for clickable rows (those with a camera_id). Notifications without a camera (system events) are not clickable.
+2. Acknowledge button doesn't trigger navigation. Added e.stopPropagation() on the ✓ button's onClick so clicking acknowledge doesn't also fire the row's click handler and navigate away.
+3. Controlled popover. Added popoverOpen state so handleEventClick can call setPopoverOpen(false) to close the dropdown before navigating — previously the popover would stay open behind the new page.
+
+
+Root cause: STORAGE="$ROOT/storage" in start.sh where $ROOT is the project directory (e.g. /home/nvr/Documents/ai_mnvr/integrated-mnvr/integrated). This cascaded into every path that derived from it — recordings ended up at /home/nvr/Documents/.../integrated/storage/recordings/cam_22/... as seen in the original logs.
+
+start.sh — 3 fixes:
+
+STORAGE="/storage" — absolute path, no longer relative to the repo root
+.env generation block: STORAGE_PATH=/storage, RECORDINGS_PATH=/storage/recordings, HLS_PATH=/storage/hls
+--with-nvr sed patches: now write storage_base = /storage/recordings and hls_base = /storage/hls into mnvr.conf instead of $ROOT/storage/...
+
+nvr_core/config/mnvr.conf — uncommented the two storage lines and set them to absolute paths:
+storage_base  = /storage/recordings
+hls_base      = /storage/hls
+Previously they were commented out, so the C daemon fell back to whatever default it had internally.
+server/src/index.js — default STORAGE_PATH changed from path.join(__dirname, "../../storage") (relative to server binary, resolves inside the repo) to "/storage".
+server/src/routes/streaming.js — same fix: defaults from path.join(__dirname, '../../../storage/...') to '/storage/recordings' and '/storage/hls'.
+server/.env.example and server/seed.js — same absolute path defaults so fresh installs start correctly.
+
+Note: Make sure /storage/recordings and /storage/hls exist and are writable by the process user before starting — start.sh now calls mkdir -p /storage/recordings /storage/hls at startup so it will create them automatically (you may need to run start.sh with sudo once, or pre-create them with sudo mkdir -p /storage && sudo chown nvr:nvr /storage).
