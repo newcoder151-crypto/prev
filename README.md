@@ -439,3 +439,195 @@ server/src/routes/streaming.js — same fix: defaults from path.join(__dirname, 
 server/.env.example and server/seed.js — same absolute path defaults so fresh installs start correctly.
 
 Note: Make sure /storage/recordings and /storage/hls exist and are writable by the process user before starting — start.sh now calls mkdir -p /storage/recordings /storage/hls at startup so it will create them automatically (you may need to run start.sh with sudo once, or pre-create them with sudo mkdir -p /storage && sudo chown nvr:nvr /storage).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+amer_module -Isrc/modules/hls -Isrc/modules/streamer -Isrc/modules/ai -Isrc/modules/health -Isrc/modules/api -Isrc/db -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/x86_64-linux-gnu -pthread  -I/usr/include/postgresql  -DMNVR_WITH_API -I/usr/include/p11-kit-1  \
+    -Wno-unused-parameter \
+    -Wno-unused-result \
+    -Wno-implicit-function-declaration \
+    -D_POSIX_C_SOURCE=200809L \
+    -c src/modules/recorder/original_gstreamer_module/recorder.c -o build/orig/recorder.o
+src/modules/onvif/onvif_module.c: In function ‘onvif_get_profiles’:
+src/modules/onvif/onvif_module.c:1049:25: warning: unused variable ‘tag_end’ [-Wunused-variable]
+ 1049 |             const char *tag_end = p;  /* p points to "Profiles ..." */
+      |                         ^~~~~~~
+gcc -Wall -Wextra -std=c11 -O2 -Isrc/include -Isrc -Isrc/modules/logger -Isrc/modules/config -Isrc/modules/onvif -Isrc/modules/recorder -Isrc/modules/recorder/original_gstreamer_module -Isrc/modules/hls -Isrc/modules/streamer -Isrc/modules/ai -Isrc/modules/health -Isrc/modules/api -Isrc/db -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/x86_64-linux-gnu -pthread  -I/usr/include/postgresql  -DMNVR_WITH_API -I/usr/include/p11-kit-1  \
+    -Wno-unused-parameter \
+    -Wno-unused-result \
+    -Wno-implicit-function-declaration \
+    -D_POSIX_C_SOURCE=200809L \
+    -c src/modules/recorder/original_gstreamer_module/manager.c -o build/orig/manager.o
+gcc -Wall -Wextra -std=c11 -O2 -Isrc/include -Isrc -Isrc/modules/logger -Isrc/modules/config -Isrc/modules/onvif -Isrc/modules/recorder -Isrc/modules/recorder/original_gstreamer_module -Isrc/modules/hls -Isrc/modules/streamer -Isrc/modules/ai -Isrc/modules/health -Isrc/modules/api -Isrc/db -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/x86_64-linux-gnu -pthread  -I/usr/include/postgresql  -DMNVR_WITH_API -I/usr/include/p11-kit-1  \
+    -Wno-unused-parameter \
+    -Wno-unused-result \
+    -Wno-implicit-function-declaration \
+    -D_POSIX_C_SOURCE=200809L \
+    -c src/modules/recorder/original_gstreamer_module/callbacks.c -o build/orig/callbacks.o
+src/modules/ai/ai_module.c: In function ‘save_face_crop_colour’:
+src/modules/ai/ai_module.c:109:5: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  109 |     if (cx1 < 0) cx1 = 0;  if (cy1 < 0) cy1 = 0;
+      |     ^~
+src/modules/ai/ai_module.c:109:28: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  109 |     if (cx1 < 0) cx1 = 0;  if (cy1 < 0) cy1 = 0;
+      |                            ^~
+src/modules/ai/ai_module.c:110:5: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  110 |     if (cx2 > fw) cx2 = fw; if (cy2 > fh) cy2 = fh;
+
+src/modules/ai/ai_module.c: In function ‘yuv_aligned_to_embed_input’:
+src/modules/ai/ai_module.c:360:13: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  360 |             if (x0 < 0) x0 = 0; if (x0 >= fw) x0 = fw - 1;
+      |             ^~
+src/modules/ai/ai_module.c:360:33: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  360 |             if (x0 < 0) x0 = 0; if (x0 >= fw) x0 = fw - 1;
+      |                                 ^~
+src/modules/ai/ai_module.c:361:13: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  361 |             if (x1 < 0) x1 = 0; if (x1 >= fw) x1 = fw - 1;
+      |             ^~
+src/modules/ai/ai_module.c:361:33: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  361 |             if (x1 < 0) x1 = 0; if (x1 >= fw) x1 = fw - 1;
+      |                                 ^~
+src/modules/ai/ai_module.c:362:13: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  362 |             if (y0 < 0) y0 = 0; if (y0 >= fh) y0 = fh - 1;
+      |             ^~
+src/modules/ai/ai_module.c:362:33: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  362 |             if (y0 < 0) y0 = 0; if (y0 >= fh) y0 = fh - 1;
+      |                                 ^~
+src/modules/ai/ai_module.c:363:13: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  363 |             if (y1 < 0) y1 = 0; if (y1 >= fh) y1 = fh - 1;
+      |             ^~
+src/modules/ai/ai_module.c:363:33: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  363 |             if (y1 < 0) y1 = 0; if (y1 >= fh) y1 = fh - 1;
+      |                                 ^~
+src/modules/ai/ai_module.c: In function ‘process_frame’:
+src/modules/ai/ai_module.c:1066:17: warning: implicit declaration of function ‘db_insert_motion_event’; did you mean ‘db_insert_event’? [-Wimplicit-function-declaration]
+ 1066 |                 db_insert_motion_event(cam->ctx->db, cam->camera_id,
+      |                 ^~~~~~~~~~~~~~~~~~~~~~
+      |                 db_insert_event
+gcc -Wall -Wextra -std=c11 -O2 -Isrc/include -Isrc -Isrc/modules/logger -Isrc/modules/config -Isrc/modules/onvif -Isrc/modules/recorder -Isrc/modules/recorder/original_gstreamer_module -Isrc/modules/hls -Isrc/modules/streamer -Isrc/modules/ai -Isrc/modules/health -Isrc/modules/api -Isrc/db -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/x86_64-linux-gnu -pthread  -I/usr/include/postgresql  -DMNVR_WITH_API -I/usr/include/p11-kit-1  \
+    -Wno-unused-parameter \
+    -Wno-unused-result \
+
+-D_POSIX_C_SOURCE=200809L \
+    -c src/modules/recorder/original_gstreamer_module/config.c -o build/orig/config.o
+src/modules/ai/ai_module.c:1173:39: warning: implicit declaration of function ‘db_insert_face_with_dedup_embed’ [-Wimplicit-function-declaration]
+ 1173 |                         int face_id = db_insert_face_with_dedup_embed(
+      |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/modules/ai/ai_module.c: At top level:
+src/modules/ai/ai_module.c:315:13: warning: ‘yuv_aligned_to_embed_input’ defined but not used [-Wunused-function]
+  315 | static void yuv_aligned_to_embed_input(
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/modules/ai/ai_module.c:270:13: warning: ‘solve_similarity_transform_2x3’ defined but not used [-Wunused-function]
+  270 | static void solve_similarity_transform_2x3(
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/modules/ai/ai_module.c:260:20: warning: ‘kRefLmY’ defined but not used [-Wunused-const-variable=]
+  260 | static const float kRefLmY[5] = { 51.69f, 51.50f, 71.74f, 92.37f, 92.20f };
+      |                    ^~~~~~~
+src/modules/ai/ai_module.c:259:20: warning: ‘kRefLmX’ defined but not used [-Wunused-const-variable=]
+  259 | static const float kRefLmX[5] = { 38.29f, 73.53f, 56.02f, 41.55f, 70.73f };
+      |                    ^~~~~~~
+src/modules/ai/ai_module.c:179:13: warning: ‘l2_normalize’ defined but not used [-Wunused-function]
+  179 | static void l2_normalize(float *vec, int dim)
+      |             ^~~~~~~~~~~~
+src/core/main.c: In function ‘on_new_onvif_device’:
+src/core/main.c:226:9: warning: ‘__builtin_strncpy’ output may be truncated copying 255 bytes from a string of length 255 [-Wstringop-truncation]
+  226 |         strncpy(rtsp_url, dev->stream_uri, sizeof(rtsp_url) - 1);
+      |         ^
+src/core/main.c:323:9: warning: ‘__builtin_strncpy’ output may be truncated copying 63 bytes from a string of length 127 [-Wstringop-truncation]
+  323 |         strncpy(hot_cam.name, cam_name, sizeof(hot_cam.name) - 1);
+      |         ^
+src/core/main.c:324:9: warning: ‘__builtin_strncpy’ output may be truncated copying 255 bytes from a string of length 255 [-Wstringop-truncation]
+  324 |         strncpy(hot_cam.rtsp_url, rtsp_url, sizeof(hot_cam.rtsp_url) - 1);
+      |         ^
+src/core/main.c:325:9: warning: ‘__builtin_strncpy’ output may be truncated copying 63 bytes from a string of length 63 [-Wstringop-truncation]
+  325 |         strncpy(hot_cam.ip_address, dev->ip_address, sizeof(hot_cam.ip_address) - 1);
+      |         ^
+src/core/main.c:335:21: warning: ‘/cam_’ directive output may be truncated writing 5 bytes into a region of size between 1 and 512 [-Wformat-truncation=]
+  335 |                  "%s/cam_%d", ctx->storage_base, dev->config_slot);
+      |                     ^~~~~
+In file included from /usr/include/stdio.h:980,
+
+    inlined from ‘on_new_onvif_device’ at src/core/main.c:334:9:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:54:10: note: ‘__builtin___snprintf_chk’ output between 7 and 528 bytes into a destination of size 512
+   54 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   55 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+src/core/main.c: In function ‘on_new_onvif_device’:
+src/core/main.c:337:21: warning: ‘/cam_’ directive output may be truncated writing 5 bytes into a region of size between 1 and 512 [-Wformat-truncation=]
+  337 |                  "%s/cam_%d", ctx->hls_base, dev->config_slot);
+      |                     ^~~~~
+In function ‘snprintf’,
+    inlined from ‘on_new_onvif_device’ at src/core/main.c:336:9:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:54:10: note: ‘__builtin___snprintf_chk’ output between 7 and 528 bytes into a destination of size 512
+   54 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   55 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+src/modules/streamer/streamer_module.c: In function ‘streamer_add_camera’:
+src/modules/streamer/streamer_module.c:386:5: warning: ‘__builtin_strncpy’ output may be truncated copying 63 bytes from a string of length 63 [-Wstringop-truncation]
+  386 |     strncpy(cam->camera_name,   info->name,          MNVR_MAX_NAME - 1);
+      |     ^
+src/modules/streamer/streamer_module.c:387:5: warning: ‘__builtin_strncpy’ output may be truncated copying 255 bytes from a string of length 255 [-Wstringop-truncation]
+  387 |     strncpy(cam->rtsp_url,      info->rtsp_url,      MNVR_MAX_URL - 1);
+      |     ^
+src/modules/streamer/streamer_module.c:388:5: warning: ‘__builtin_strncpy’ output may be truncated copying 63 bytes from a string of length 63 [-Wstringop-truncation]
+  388 |     strncpy(cam->rtsp_username, info->rtsp_username, sizeof(cam->rtsp_username) - 1);
+      |     ^
+src/modules/streamer/streamer_module.c:389:5: warning: ‘__builtin_strncpy’ output may be truncated copying 127 bytes from a string of length 127 [-Wstringop-truncation]
+  389 |     strncpy(cam->rtsp_password, info->rtsp_password, sizeof(cam->rtsp_password) - 1);
+      |     ^
+src/modules/hls/hls_module.c: In function ‘hls_add_camera’:
+src/modules/hls/hls_module.c:383:5: warning: ‘__builtin_strncpy’ output may be truncated copying 511 bytes from a string of length 511 [-Wstringop-truncation]
+  383 |     strncpy(cam->hls_dir, info->hls_output_dir, MNVR_MAX_PATH - 1);
+      |     ^
+
+In file included from /usr/include/stdio.h:980,
+                 from /usr/include/postgresql/libpq-fe.h:24,
+                 from src/modules/hls/../../db/db_module.h:29,
+                 from src/modules/hls/hls_module.c:20:
+In function ‘snprintf’,
+    inlined from ‘hls_add_camera’ at src/modules/hls/hls_module.c:384:5:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:54:10: warning: ‘__builtin___snprintf_chk’ argument 6 may overlap destination object ‘hm’ [-Wrestrict]
+   54 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   55 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+src/modules/hls/hls_module.c: In function ‘hls_add_camera’:
+src/modules/hls/hls_module.c:363:38: note: destination object referenced by ‘restrict’-qualified argument 1 was declared here
+  363 | MnvrResult hls_add_camera(HlsModule *hm, const CameraInfo *info)
+      |                           ~~~~~~~~~~~^~
+src/modules/ai/ai_module.c: In function ‘ai_add_camera’:
+src/modules/ai/ai_module.c:1556:5: warning: ‘__builtin_strncpy’ output may be truncated copying 63 bytes from a string of length 63 [-Wstringop-truncation]
+ 1556 |     strncpy(cam->camera_name,      info->name,   MNVR_MAX_NAME - 1);
+      |     ^
+src/modules/onvif/onvif_module.c: In function ‘onvif_probe_direct’:
+src/modules/onvif/onvif_module.c:2075:5: warning: ‘__builtin_strncpy’ output may be truncated copying 255 bytes from a string of length 255 [-Wstringop-truncation]
+ 2075 |     strncpy(out->xaddrs, xaddr, sizeof(out->xaddrs) - 1);
+      |     ^
+src/modules/onvif/onvif_module.c:2100:9: warning: ‘__builtin_strncpy’ output may be truncated copying 15 bytes from a string of length 15 [-Wstringop-truncation]
+ 2100 |         strncpy(out->profile_encoding, profiles[0].encoding,
+      |         ^
+gcc  build/core/main.o  build/modules/logger/logger.o  build/modules/config/config_module.o  build/modules/onvif/onvif_module.o  build/modules/recorder/recorder_module.o  build/modules/hls/hls_module.o  build/modules/streamer/streamer_module.o  build/modules/ai/ai_module.o  build/modules/health/health_module.o  build/modules/api/api_module.o  build/db/db_module.o  build/orig/recorder.o  build/orig/manager.o  build/orig/callbacks.o  build/orig/utils.o  build/orig/config.o -o build/mnvrd -lpthread -lgstapp-1.0 -lgstbase-1.0 -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0  -lpq  -lmicrohttpd  -lm
+/usr/bin/ld: build/modules/ai/ai_module.o: in function `ai_worker_thread':
+ai_module.c:(.text+0x6d1): undefined reference to `db_insert_motion_event'
+collect2: error: ld returned 1 exit status
+make: *** [Makefile:128: build/mnvrd] Error 1
+
