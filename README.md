@@ -631,3 +631,353 @@ ai_module.c:(.text+0x6d1): undefined reference to `db_insert_motion_event'
 collect2: error: ld returned 1 exit status
 make: *** [Makefile:128: build/mnvrd] Error 1
 
+
+############################ 29 June
+nvr@nvr:~/Documents/ai_mnvr/mnvr_integrated_final/integrated$ sudo bash start.sh --build-nvr
+[sudo] password for nvr: 
+
+
+  ╔══════════════════════════════════════════════════════════╗
+  ║   Railway mNVR — AI Network Video Recorder              ║
+  ║   BEL · Indian Railways · EN 50155 · MediaMTX WebRTC   ║
+  ╚══════════════════════════════════════════════════════════╝
+
+
+━━━ 1/10  Environment ━━━
+VITE_MEDIAMTX_WEB=http://localhost:8889
+VITE_MEDIAMTX_HLS=http://localhost:8888
+  ✓ Environment loaded — API :3001
+
+━━━ 2/10  Prerequisites ━━━
+  ✓ node
+  ✓ npm
+  ✓ python3
+  ✓ ffmpeg
+  ✓ psql
+  ✓ curl
+
+━━━ 3/10  Building mNVR C Daemon ━━━
+Reading package lists...
+Building dependency tree...
+Reading state information...
+gcc is already the newest version (4:13.2.0-7ubuntu1).
+make is already the newest version (4.3-4.1build2).
+pkg-config is already the newest version (1.8.1-2build1).
+libgstreamer1.0-dev is already the newest version (1.24.2-1ubuntu0.1).
+libgstreamer-plugins-base1.0-dev is already the newest version (1.24.2-1ubuntu0.4).
+gstreamer1.0-plugins-good is already the newest version (1.24.2-1ubuntu1.4).
+gstreamer1.0-plugins-bad is already the newest version (1.24.2-1ubuntu4).
+gstreamer1.0-libav is already the newest version (1.24.1-1build1).
+libpq-dev is already the newest version (18.4-1.pgdg24.04+1).
+libmicrohttpd-dev is already the newest version (1.0.0-2.1ubuntu2).
+The following packages were automatically installed and are no longer required:
+  gyp libapt-pkg-perl libarray-unique-perl libclass-accessor-perl
+  libdebian-copyright-perl libdebian-source-perl libexporter-lite-perl
+  libexporter-tiny-perl libgraph-perl libheap-perl libio-pty-perl
+  libipc-run-perl libjs-async libjs-events libjs-inherits libjs-is-typedarray
+  libjs-prettify libjs-regenerate libjs-source-map libjs-sprintf-js
+  libjs-typedarray-to-buffer liblist-moreutils-perl liblist-moreutils-xs-perl
+  libparse-debcontrol-perl libre2-10 libset-object-perl libwww-mechanize-perl
+  libyaml-libyaml-perl libyaml-perl node-abbrev node-ampproject-remapping
+  node-ansi-regex node-ansi-styles node-aproba node-are-we-there-yet
+  node-arrify node-async node-async-each node-auto-bind
+  node-babel-plugin-add-module-exports node-babel7-runtime node-balanced-match
+  node-base64-js node-binary-extensions node-brace-expansion node-busboy
+  node-camelcase node-caniuse-lite node-chownr node-chrome-trace-event
+  node-ci-info node-cjs-module-lexer node-cli-boxes node-cli-cursor node-clone
+  node-collection-visit node-color-convert node-color-name node-colors
+  node-commander node-commondir node-concat-stream
+  node-console-control-strings node-convert-source-map node-core-js
+  node-core-js-pure node-core-util-is node-data-uri-to-buffer
+  node-decompress-response node-deep-is node-defaults node-define-property
+  node-delegates node-depd node-diff node-electron-to-chromium node-encoding
+  node-end-of-stream node-err-code node-error-ex node-es-module-lexer
+  node-escape-string-regexp node-eslint-utils node-eslint-visitor-keys
+  node-esquery node-estraverse node-esutils node-events node-fancy-log
+  node-fast-deep-equal node-fast-levenshtein node-fetch node-find-up
+  node-flatted node-foreground-child node-fs-readdir-recursive
+  node-fs-write-stream-atomic node-fs.realpath node-function-bind
+  node-get-caller-file node-get-stream node-get-value node-glob node-globals
+  node-got node-graceful-fs node-growl node-has-flag node-has-unicode
+  node-has-value node-has-values node-hosted-git-info node-iconv-lite
+  node-ieee754 node-iferr node-imurmurhash node-indent-string node-inflight
+  node-inherits node-ini node-interpret node-ip node-ip-regex node-is-arrayish
+  node-is-binary-path node-is-buffer node-is-descriptor node-is-extglob
+  node-is-path-cwd node-is-plain-obj node-is-plain-object node-is-stream
+  node-is-typedarray node-is-windows node-isarray node-isexe node-isobject
+  node-js-tokens node-json-buffer node-json-parse-better-errors
+  node-json-schema node-json-schema-traverse node-json-stable-stringify
+  node-jsonify node-jsonparse node-kind-of node-levn node-loader-runner
+  node-locate-path node-lodash-packages node-lowercase-keys node-lru-cache
+  node-map-visit node-memfs node-merge-stream node-mimic-response
+  node-minimatch node-minimist node-minipass node-mute-stream node-n3
+  node-negotiator node-npm-run-path node-object-inspect node-object-visit
+  node-once node-optimist node-optionator node-osenv node-p-cancelable
+  node-p-limit node-p-locate node-p-map node-pascalcase node-path-dirname
+  node-path-exists node-path-is-absolute node-path-is-inside node-path-type
+  node-pify node-pkg-dir node-postcss-value-parser node-prelude-ls
+  node-process-nextick-args node-promise-inflight node-promise-retry
+  node-promzard node-prr node-pump node-punycode node-quick-lru
+  node-randombytes node-read node-readable-stream node-rechoir
+  node-regenerator-runtime node-regenerator-transform node-regexpp
+  node-regjsgen node-repeat-string node-require-directory
+  node-require-from-string node-resolve node-resolve-cwd node-resolve-from
+  node-restore-cursor node-resumer node-retry node-run-queue node-safe-buffer
+  node-serialize-javascript node-set-blocking node-set-immediate-shim
+  node-shebang-command node-shebang-regex node-shell-quote node-signal-exit
+  node-slash node-slice-ansi node-source-list-map node-source-map
+  node-spdx-correct node-spdx-exceptions node-spdx-expression-parse
+  node-spdx-license-ids node-sprintf-js node-ssri node-stack-utils
+  node-string-decoder node-strip-bom node-supports-color node-tapable
+  node-terser node-text-table node-through node-time-stamp
+  node-to-fast-properties node-tslib node-type-check node-typedarray
+  node-typedarray-to-buffer node-undici
+  node-unicode-canonical-property-names-ecmascript
+  node-unicode-match-property-value-ecmascript
+  node-unicode-property-aliases-ecmascript node-unset-value node-uri-js
+  node-util-deprecate node-uuid node-v8flags node-validate-npm-package-license
+  node-wcwidth.js node-webpack-sources node-wordwrap node-wrappy
+  node-write-file-atomic node-xtend node-y18n node-yallist node-yaml
+  tzdata-legacy
+Use 'sudo apt autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 251 not upgraded.
+REST API: ENABLED  (libmicrohttpd found)
+rm -rf build
+REST API: ENABLED  (libmicrohttpd found)
+gcc -Wall -Wextra -std=c11 -O2 -Isrc/include -Isrc -Isrc/modules/logger -Isrc/modules/config -Isrc/modules/onvif -Isrc/modules/recorder -Isrc/modules/recorder/original_gstreamer_module -Isrc/modules/hls -Isrc/modules/streamer -Isrc/modules/ai -Isrc/modules/health -Isrc/modules/api -Isrc/db -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/x86_64-linux-gnu -pthread  -I/usr/include/postgresql  -DMNVR_WITH_API -I/usr/include/p11-kit-1  -c src/core/main.c -o build/core/main.o
+gcc -Wall -Wextra -std=c11 -O2 -Isrc/include -Isrc -Isrc/modules/logger -Isrc/modules/config -Isrc/modules/onvif -Isrc/modules/recorder -Isrc/modules/recorder/original_gstreamer_module -Isrc/modules/hls -Isrc/modules/streamer -Isrc/modules/ai -Isrc/modules/health -Isrc/modules/api -Isrc/db -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/x86_64-linux-gnu -pthread  -I/usr/include/postgresql  -DMNVR_WITH_API -I/usr/include/p11-kit-1  -c src/modules/logger/logger.c -o build/modules/logger/logger.o
+gcc -Wall -Wextra -std=c11 -O2 -Isrc/include -Isrc -Isrc/modules/logger -Isrc/modules/config -Isrc/modules/onvif -Isrc/modules/recorder -Isrc/modules/recorder/original_gstreamer_module -Isrc/modules/hls -Isrc/modules/streamer -Isrc/modules/ai -Isrc/modules/health -Isrc/modules/api -Isrc/db -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/x86_64-linux-gnu -pthread  -I/usr/include/postgresql  -DMNVR_WITH_API -I/usr/include/p11-kit-1  -c src/modules/config/config_module.c -o build/modules/config/config_module.o
+gcc -Wall -Wextra -std=c11 -O2 -Isrc/include -Isrc -Isrc/modules/logger -Isrc/modules/config -Isrc/modules/onvif -Isrc/modules/recorder -Isrc/modules/recorder/original_gstreamer_module -Isrc/modules/hls -Isrc/modules/streamer -Isrc/modules/ai -Isrc/modules/health -Isrc/modules/api -Isrc/db -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/x86_64-linux-gnu -pthread  -I/usr/include/postgresql  -DMNVR_WITH_API -I/usr/include/p11-kit-1  -c src/modules/onvif/onvif_module.c -o build/modules/onvif/onvif_module.o
+gcc -Wall -Wextra -std=c11 -O2 -Isrc/include -Isrc -Isrc/modules/logger -Isrc/modules/config -Isrc/modules/onvif -Isrc/modules/recorder -Isrc/modules/recorder/original_gstreamer_module -Isrc/modules/hls -Isrc/modules/streamer -Isrc/modules/ai -Isrc/modules/health -Isrc/modules/api -Isrc/db -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/x86_64-linux-gnu -pthread  -I/usr/include/postgresql  -DMNVR_WITH_API -I/usr/include/p11-kit-1  -c src/modules/recorder/recorder_module.c -o build/modules/recorder/recorder_module.o
+gcc -Wall -Wextra -std=c11 -O2 -Isrc/include -Isrc -Isrc/modules/logger -Isrc/modules/config -Isrc/modules/onvif -Isrc/modules/recorder -Isrc/modules/recorder/original_gstreamer_module -Isrc/modules/hls -Isrc/modules/streamer -Isrc/modules/ai -Isrc/modules/health -Isrc/modules/api -Isrc/db -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/x86_64-linux-gnu -pthread  -I/usr/include/postgresql  -DMNVR_WITH_API -I/usr/include/p11-kit-1  -c src/modules/hls/hls_module.c -o build/modules/hls/hls_module.o
+gcc -Wall -Wextra -std=c11 -O2 -Isrc/include -Isrc -Isrc/modules/logger -Isrc/modules/config -Isrc/modules/onvif -Isrc/modules/recorder -Isrc/modules/recorder/original_gstreamer_module -Isrc/modules/hls -Isrc/modules/streamer -Isrc/modules/ai -Isrc/modules/health -Isrc/modules/api -Isrc/db -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/x86_64-linux-gnu -pthread  -I/usr/include/postgresql  -DMNVR_WITH_API -I/usr/include/p11-kit-1  -c src/modules/streamer/streamer_module.c -o build/modules/streamer/streamer_module.o
+gcc -Wall -Wextra -std=c11 -O2 -Isrc/include -Isrc -Isrc/modules/logger -Isrc/modules/config -Isrc/modules/onvif -Isrc/modules/recorder -Isrc/modules/recorder/original_gstreamer_module -Isrc/modules/hls -Isrc/modules/streamer -Isrc/modules/ai -Isrc/modules/health -Isrc/modules/api -Isrc/db -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/x86_64-linux-gnu -pthread  -I/usr/include/postgresql  -DMNVR_WITH_API -I/usr/include/p11-kit-1  -c src/modules/ai/ai_module.c -o build/modules/ai/ai_module.o
+gcc -Wall -Wextra -std=c11 -O2 -Isrc/include -Isrc -Isrc/modules/logger -Isrc/modules/config -Isrc/modules/onvif -Isrc/modules/recorder -Isrc/modules/recorder/original_gstreamer_module -Isrc/modules/hls -Isrc/modules/streamer -Isrc/modules/ai -Isrc/modules/health -Isrc/modules/api -Isrc/db -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/x86_64-linux-gnu -pthread  -I/usr/include/postgresql  -DMNVR_WITH_API -I/usr/include/p11-kit-1  -c src/modules/health/health_module.c -o build/modules/health/health_module.o
+gcc -Wall -Wextra -std=c11 -O2 -Isrc/include -Isrc -Isrc/modules/logger -Isrc/modules/config -Isrc/modules/onvif -Isrc/modules/recorder -Isrc/modules/recorder/original_gstreamer_module -Isrc/modules/hls -Isrc/modules/streamer -Isrc/modules/ai -Isrc/modules/health -Isrc/modules/api -Isrc/db -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/x86_64-linux-gnu -pthread  -I/usr/include/postgresql  -DMNVR_WITH_API -I/usr/include/p11-kit-1  -c src/modules/api/api_module.c -o build/modules/api/api_module.o
+gcc -Wall -Wextra -std=c11 -O2 -Isrc/include -Isrc -Isrc/modules/logger -Isrc/modules/config -Isrc/modules/onvif -Isrc/modules/recorder -Isrc/modules/recorder/original_gstreamer_module -Isrc/modules/hls -Isrc/modules/streamer -Isrc/modules/ai -Isrc/modules/health -Isrc/modules/api -Isrc/db -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/x86_64-linux-gnu -pthread  -I/usr/include/postgresql  -DMNVR_WITH_API -I/usr/include/p11-kit-1  -c src/db/db_module.c -o build/db/db_module.o
+gcc -Wall -Wextra -std=c11 -O2 -Isrc/include -Isrc -Isrc/modules/logger -Isrc/modules/config -Isrc/modules/onvif -Isrc/modules/recorder -Isrc/modules/recorder/original_gstreamer_module -Isrc/modules/hls -Isrc/modules/streamer -Isrc/modules/ai -Isrc/modules/health -Isrc/modules/api -Isrc/db -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/x86_64-linux-gnu -pthread  -I/usr/include/postgresql  -DMNVR_WITH_API -I/usr/include/p11-kit-1  \
+    -Wno-unused-parameter \
+    -Wno-unused-result \
+    -Wno-implicit-function-declaration \
+    -D_POSIX_C_SOURCE=200809L \
+    -c src/modules/recorder/original_gstreamer_module/recorder.c -o build/orig/recorder.o
+src/modules/onvif/onvif_module.c: In function ‘onvif_get_profiles’:
+src/modules/onvif/onvif_module.c:1049:25: warning: unused variable ‘tag_end’ [-Wunused-variable]
+ 1049 |             const char *tag_end = p;  /* p points to "Profiles ..." */
+      |                         ^~~~~~~
+gcc -Wall -Wextra -std=c11 -O2 -Isrc/include -Isrc -Isrc/modules/logger -Isrc/modules/config -Isrc/modules/onvif -Isrc/modules/recorder -Isrc/modules/recorder/original_gstreamer_module -Isrc/modules/hls -Isrc/modules/streamer -Isrc/modules/ai -Isrc/modules/health -Isrc/modules/api -Isrc/db -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/x86_64-linux-gnu -pthread  -I/usr/include/postgresql  -DMNVR_WITH_API -I/usr/include/p11-kit-1  \
+    -Wno-unused-parameter \
+    -Wno-unused-result \
+    -Wno-implicit-function-declaration \
+    -D_POSIX_C_SOURCE=200809L \
+    -c src/modules/recorder/original_gstreamer_module/manager.c -o build/orig/manager.o
+src/modules/ai/ai_module.c: In function ‘save_face_crop_colour’:
+src/modules/ai/ai_module.c:109:5: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  109 |     if (cx1 < 0) cx1 = 0;  if (cy1 < 0) cy1 = 0;
+      |     ^~
+src/modules/ai/ai_module.c:109:28: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  109 |     if (cx1 < 0) cx1 = 0;  if (cy1 < 0) cy1 = 0;
+      |                            ^~
+src/modules/ai/ai_module.c:110:5: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  110 |     if (cx2 > fw) cx2 = fw; if (cy2 > fh) cy2 = fh;
+      |     ^~
+src/modules/ai/ai_module.c:110:29: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  110 |     if (cx2 > fw) cx2 = fw; if (cy2 > fh) cy2 = fh;
+      |                             ^~
+src/modules/ai/ai_module.c: In function ‘yuv_aligned_to_embed_input’:
+src/modules/ai/ai_module.c:360:13: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  360 |             if (x0 < 0) x0 = 0; if (x0 >= fw) x0 = fw - 1;
+      |             ^~
+src/modules/ai/ai_module.c:360:33: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  360 |             if (x0 < 0) x0 = 0; if (x0 >= fw) x0 = fw - 1;
+      |                                 ^~
+src/modules/ai/ai_module.c:361:13: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  361 |             if (x1 < 0) x1 = 0; if (x1 >= fw) x1 = fw - 1;
+      |             ^~
+src/modules/ai/ai_module.c:361:33: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  361 |             if (x1 < 0) x1 = 0; if (x1 >= fw) x1 = fw - 1;
+      |                                 ^~
+src/modules/ai/ai_module.c:362:13: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  362 |             if (y0 < 0) y0 = 0; if (y0 >= fh) y0 = fh - 1;
+      |             ^~
+src/modules/ai/ai_module.c:362:33: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  362 |             if (y0 < 0) y0 = 0; if (y0 >= fh) y0 = fh - 1;
+      |                                 ^~
+src/modules/ai/ai_module.c:363:13: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  363 |             if (y1 < 0) y1 = 0; if (y1 >= fh) y1 = fh - 1;
+      |             ^~
+src/modules/ai/ai_module.c:363:33: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  363 |             if (y1 < 0) y1 = 0; if (y1 >= fh) y1 = fh - 1;
+      |                                 ^~
+gcc -Wall -Wextra -std=c11 -O2 -Isrc/include -Isrc -Isrc/modules/logger -Isrc/modules/config -Isrc/modules/onvif -Isrc/modules/recorder -Isrc/modules/recorder/original_gstreamer_module -Isrc/modules/hls -Isrc/modules/streamer -Isrc/modules/ai -Isrc/modules/health -Isrc/modules/api -Isrc/db -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/x86_64-linux-gnu -pthread  -I/usr/include/postgresql  -DMNVR_WITH_API -I/usr/include/p11-kit-1  \
+    -Wno-unused-parameter \
+    -Wno-unused-result \
+    -Wno-implicit-function-declaration \
+    -D_POSIX_C_SOURCE=200809L \
+    -c src/modules/recorder/original_gstreamer_module/callbacks.c -o build/orig/callbacks.o
+src/modules/ai/ai_module.c: In function ‘process_frame’:
+src/modules/ai/ai_module.c:1066:17: warning: implicit declaration of function ‘db_insert_motion_event’; did you mean ‘db_insert_event’? [-Wimplicit-function-declaration]
+ 1066 |                 db_insert_motion_event(cam->ctx->db, cam->camera_id,
+      |                 ^~~~~~~~~~~~~~~~~~~~~~
+      |                 db_insert_event
+gcc -Wall -Wextra -std=c11 -O2 -Isrc/include -Isrc -Isrc/modules/logger -Isrc/modules/config -Isrc/modules/onvif -Isrc/modules/recorder -Isrc/modules/recorder/original_gstreamer_module -Isrc/modules/hls -Isrc/modules/streamer -Isrc/modules/ai -Isrc/modules/health -Isrc/modules/api -Isrc/db -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/x86_64-linux-gnu -pthread  -I/usr/include/postgresql  -DMNVR_WITH_API -I/usr/include/p11-kit-1  \
+    -Wno-unused-parameter \
+    -Wno-unused-result \
+    -Wno-implicit-function-declaration \
+    -D_POSIX_C_SOURCE=200809L \
+    -c src/modules/recorder/original_gstreamer_module/utils.c -o build/orig/utils.o
+src/modules/ai/ai_module.c:1173:39: warning: implicit declaration of function ‘db_insert_face_with_dedup_embed’ [-Wimplicit-function-declaration]
+ 1173 |                         int face_id = db_insert_face_with_dedup_embed(
+      |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+gcc -Wall -Wextra -std=c11 -O2 -Isrc/include -Isrc -Isrc/modules/logger -Isrc/modules/config -Isrc/modules/onvif -Isrc/modules/recorder -Isrc/modules/recorder/original_gstreamer_module -Isrc/modules/hls -Isrc/modules/streamer -Isrc/modules/ai -Isrc/modules/health -Isrc/modules/api -Isrc/db -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/x86_64-linux-gnu -pthread  -I/usr/include/postgresql  -DMNVR_WITH_API -I/usr/include/p11-kit-1  \
+    -Wno-unused-parameter \
+    -Wno-unused-result \
+    -Wno-implicit-function-declaration \
+    -D_POSIX_C_SOURCE=200809L \
+    -c src/modules/recorder/original_gstreamer_module/config.c -o build/orig/config.o
+src/core/main.c: In function ‘on_new_onvif_device’:
+src/core/main.c:226:9: warning: ‘__builtin_strncpy’ output may be truncated copying 255 bytes from a string of length 255 [-Wstringop-truncation]
+  226 |         strncpy(rtsp_url, dev->stream_uri, sizeof(rtsp_url) - 1);
+      |         ^
+src/core/main.c:323:9: warning: ‘__builtin_strncpy’ output may be truncated copying 63 bytes from a string of length 127 [-Wstringop-truncation]
+  323 |         strncpy(hot_cam.name, cam_name, sizeof(hot_cam.name) - 1);
+      |         ^
+src/core/main.c:324:9: warning: ‘__builtin_strncpy’ output may be truncated copying 255 bytes from a string of length 255 [-Wstringop-truncation]
+  324 |         strncpy(hot_cam.rtsp_url, rtsp_url, sizeof(hot_cam.rtsp_url) - 1);
+      |         ^
+src/core/main.c:325:9: warning: ‘__builtin_strncpy’ output may be truncated copying 63 bytes from a string of length 63 [-Wstringop-truncation]
+  325 |         strncpy(hot_cam.ip_address, dev->ip_address, sizeof(hot_cam.ip_address) - 1);
+      |         ^
+src/core/main.c:335:21: warning: ‘/cam_’ directive output may be truncated writing 5 bytes into a region of size between 1 and 512 [-Wformat-truncation=]
+  335 |                  "%s/cam_%d", ctx->storage_base, dev->config_slot);
+      |                     ^~~~~
+In file included from /usr/include/stdio.h:980,
+                 from src/core/main.c:50:
+In function ‘snprintf’,
+    inlined from ‘on_new_onvif_device’ at src/core/main.c:334:9:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:54:10: note: ‘__builtin___snprintf_chk’ output between 7 and 528 bytes into a destination of size 512
+   54 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   55 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+src/core/main.c: In function ‘on_new_onvif_device’:
+src/core/main.c:337:21: warning: ‘/cam_’ directive output may be truncated writing 5 bytes into a region of size between 1 and 512 [-Wformat-truncation=]
+  337 |                  "%s/cam_%d", ctx->hls_base, dev->config_slot);
+      |                     ^~~~~
+In function ‘snprintf’,
+    inlined from ‘on_new_onvif_device’ at src/core/main.c:336:9:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:54:10: note: ‘__builtin___snprintf_chk’ output between 7 and 528 bytes into a destination of size 512
+   54 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   55 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+src/modules/ai/ai_module.c: At top level:
+src/modules/ai/ai_module.c:315:13: warning: ‘yuv_aligned_to_embed_input’ defined but not used [-Wunused-function]
+  315 | static void yuv_aligned_to_embed_input(
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/modules/ai/ai_module.c:270:13: warning: ‘solve_similarity_transform_2x3’ defined but not used [-Wunused-function]
+  270 | static void solve_similarity_transform_2x3(
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/modules/ai/ai_module.c:260:20: warning: ‘kRefLmY’ defined but not used [-Wunused-const-variable=]
+  260 | static const float kRefLmY[5] = { 51.69f, 51.50f, 71.74f, 92.37f, 92.20f };
+      |                    ^~~~~~~
+src/modules/ai/ai_module.c:259:20: warning: ‘kRefLmX’ defined but not used [-Wunused-const-variable=]
+  259 | static const float kRefLmX[5] = { 38.29f, 73.53f, 56.02f, 41.55f, 70.73f };
+      |                    ^~~~~~~
+src/modules/ai/ai_module.c:179:13: warning: ‘l2_normalize’ defined but not used [-Wunused-function]
+  179 | static void l2_normalize(float *vec, int dim)
+      |             ^~~~~~~~~~~~
+src/modules/streamer/streamer_module.c: In function ‘streamer_add_camera’:
+src/modules/streamer/streamer_module.c:386:5: warning: ‘__builtin_strncpy’ output may be truncated copying 63 bytes from a string of length 63 [-Wstringop-truncation]
+  386 |     strncpy(cam->camera_name,   info->name,          MNVR_MAX_NAME - 1);
+      |     ^
+src/modules/streamer/streamer_module.c:387:5: warning: ‘__builtin_strncpy’ output may be truncated copying 255 bytes from a string of length 255 [-Wstringop-truncation]
+  387 |     strncpy(cam->rtsp_url,      info->rtsp_url,      MNVR_MAX_URL - 1);
+      |     ^
+src/modules/streamer/streamer_module.c:388:5: warning: ‘__builtin_strncpy’ output may be truncated copying 63 bytes from a string of length 63 [-Wstringop-truncation]
+  388 |     strncpy(cam->rtsp_username, info->rtsp_username, sizeof(cam->rtsp_username) - 1);
+      |     ^
+src/modules/streamer/streamer_module.c:389:5: warning: ‘__builtin_strncpy’ output may be truncated copying 127 bytes from a string of length 127 [-Wstringop-truncation]
+  389 |     strncpy(cam->rtsp_password, info->rtsp_password, sizeof(cam->rtsp_password) - 1);
+      |     ^
+src/modules/hls/hls_module.c: In function ‘hls_add_camera’:
+src/modules/hls/hls_module.c:383:5: warning: ‘__builtin_strncpy’ output may be truncated copying 511 bytes from a string of length 511 [-Wstringop-truncation]
+  383 |     strncpy(cam->hls_dir, info->hls_output_dir, MNVR_MAX_PATH - 1);
+      |     ^
+In file included from /usr/include/stdio.h:980,
+                 from /usr/include/postgresql/libpq-fe.h:24,
+                 from src/modules/hls/../../db/db_module.h:29,
+                 from src/modules/hls/hls_module.c:20:
+In function ‘snprintf’,
+    inlined from ‘hls_add_camera’ at src/modules/hls/hls_module.c:384:5:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:54:10: warning: ‘__builtin___snprintf_chk’ argument 6 may overlap destination object ‘hm’ [-Wrestrict]
+   54 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   55 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+src/modules/hls/hls_module.c: In function ‘hls_add_camera’:
+src/modules/hls/hls_module.c:363:38: note: destination object referenced by ‘restrict’-qualified argument 1 was declared here
+  363 | MnvrResult hls_add_camera(HlsModule *hm, const CameraInfo *info)
+      |                           ~~~~~~~~~~~^~
+src/modules/ai/ai_module.c: In function ‘ai_add_camera’:
+src/modules/ai/ai_module.c:1556:5: warning: ‘__builtin_strncpy’ output may be truncated copying 63 bytes from a string of length 63 [-Wstringop-truncation]
+ 1556 |     strncpy(cam->camera_name,      info->name,   MNVR_MAX_NAME - 1);
+      |     ^
+src/modules/onvif/onvif_module.c: In function ‘onvif_probe_direct’:
+src/modules/onvif/onvif_module.c:2075:5: warning: ‘__builtin_strncpy’ output may be truncated copying 255 bytes from a string of length 255 [-Wstringop-truncation]
+ 2075 |     strncpy(out->xaddrs, xaddr, sizeof(out->xaddrs) - 1);
+      |     ^
+src/modules/onvif/onvif_module.c:2100:9: warning: ‘__builtin_strncpy’ output may be truncated copying 15 bytes from a string of length 15 [-Wstringop-truncation]
+ 2100 |         strncpy(out->profile_encoding, profiles[0].encoding,
+      |         ^
+gcc  build/core/main.o  build/modules/logger/logger.o  build/modules/config/config_module.o  build/modules/onvif/onvif_module.o  build/modules/recorder/recorder_module.o  build/modules/hls/hls_module.o  build/modules/streamer/streamer_module.o  build/modules/ai/ai_module.o  build/modules/health/health_module.o  build/modules/api/api_module.o  build/db/db_module.o  build/orig/recorder.o  build/orig/manager.o  build/orig/callbacks.o  build/orig/utils.o  build/orig/config.o -o build/mnvrd -lpthread -lgstapp-1.0 -lgstbase-1.0 -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0  -lpq  -lmicrohttpd  -lm
+/usr/bin/ld: build/modules/ai/ai_module.o: in function `ai_worker_thread':
+ai_module.c:(.text+0x6d1): undefined reference to `db_insert_motion_event'
+collect2: error: ld returned 1 exit status
+make: *** [Makefile:128: build/mnvrd] Error 1
+nvr@nvr:~/Documents/ai_mnvr/mnvr_integrated_final/integrated$ sudo bash start.sh --with-nvr
+
+
+  ╔══════════════════════════════════════════════════════════╗
+  ║   Railway mNVR — AI Network Video Recorder              ║
+  ║   BEL · Indian Railways · EN 50155 · MediaMTX WebRTC   ║
+  ╚══════════════════════════════════════════════════════════╝
+
+
+━━━ 1/10  Environment ━━━
+VITE_MEDIAMTX_WEB=http://localhost:8889
+VITE_MEDIAMTX_HLS=http://localhost:8888
+  ✓ Environment loaded — API :3001
+
+━━━ 2/10  Prerequisites ━━━
+  ✓ node
+  ✓ npm
+  ✓ python3
+  ✓ ffmpeg
+  ✓ psql
+  ✓ curl
+
+━━━ 3/10  C Daemon Build  [skipped — use --build-nvr] ━━━
+
+━━━ 4/10  Database ━━━
+  ⚠ Checking PostgreSQL...
+  ✓ PostgreSQL ready
+
+
+━━━ 5/10  Node.js Packages ━━━
+  ⚠ Installing backend packages...
+  ✓ Backend ready
+  ⚠ Installing frontend packages...
+  ✓ Frontend ready
+
+━━━ 6/10  Python / AI Packages ━━━
+  ⚠ Creating Python venv...
+  ⚠ Installing AI packages (ultralytics ~500MB first run):
+    ──────────────────────────────────────────────────────
+    ERROR: Could not open requirements file: [Errno 2] No such file or directory: '/home/nvr/Documents/ai_mnvr/mnvr_integrated_final/integrated/server/ai/requirements.txt'
